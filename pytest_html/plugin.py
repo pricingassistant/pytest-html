@@ -126,8 +126,10 @@ class HTMLReport(object):
 
             for extra_index, extra in enumerate(getattr(report, 'extra', [])):
                 self.append_extra_html(extra, extra_index, test_index)
-
-            self.append_log_html(report, self.additional_html)
+            
+            xfail = hasattr(report, 'wasxfail')
+            if (report.skipped and xfail) or (report.failed and not xfail):
+                self.append_log_html(report, self.additional_html)
 
             self.row_table = html.tr([
                 html.td(self.outcome, class_='col-result'),
